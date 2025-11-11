@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="dashboard">
+        <nav class="sidebar">
+            <h2>⚕️ Admin Panel</h2>
+            <ul>
+                <li><a href="#" data-section="medicines">💊 Medicines</a></li>
+                <li><a href="#" data-section="customers">👥 Customers</a></li>
+                <li><a href="#" data-section="sales">💰 Sales</a></li>
+                <li><a href="#" data-section="stock">📦 Stock</a></li>
+                <li><a href="#" data-section="reports">📊 Reports</a></li>
+                <li><a href="#" id="logoutBtn">🚪 Logout</a></li>
+            </ul>
+        </nav>
+        <main class="content">
+            <div id="medicines" class="section active">
+                <h2>💊 Manage Medicines</h2>
+                <button class="btn-add" onclick="showAddMedicine()">➕ Add Medicine</button>
+                <table id="medicinesTable">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Category</th>
+                            <th>Price</th>
+                            <th>Stock</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+            <div id="customers" class="section">
+                <h2>👥 Manage Customers</h2>
+                <table id="customersTable">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+            <div id="sales" class="section">
+                <h2>💰 Sales History</h2>
+                <table id="salesTable">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Customer</th>
+                            <th>Date</th>
+                            <th>Total</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+            <div id="stock" class="section">
+                <h2>📦 Stock Management</h2>
+                <table id="stockTable">
+                    <thead>
+                        <tr>
+                            <th>Medicine</th>
+                            <th>Current Stock</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+            <div id="reports" class="section">
+                <h2>📊 Reports & Analytics</h2>
+                <div class="report-cards">
+                    <div class="card">
+                        <h3>💰 Total Sales</h3>
+                        <p id="totalSales">$0</p>
+                    </div>
+                    <div class="card">
+                        <h3>👥 Total Customers</h3>
+                        <p id="totalCustomers">0</p>
+                    </div>
+                    <div class="card">
+                        <h3>💊 Total Medicines</h3>
+                        <p id="totalMedicines">0</p>
+                    </div>
+                    <div class="card">
+                        <h3>⚠️ Low Stock Items</h3>
+                        <p id="lowStock">0</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    <div id="medicineModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2 id="modalTitle">Add Medicine</h2>
+            <form id="medicineForm">
+                <input type="hidden" id="medicineId">
+                <div class="form-group">
+                    <label>Name</label>
+                    <input type="text" id="medicineName" required>
+                </div>
+                <div class="form-group">
+                    <label>Category</label>
+                    <input type="text" id="medicineCategory" required>
+                </div>
+                <div class="form-group">
+                    <label>Price</label>
+                    <input type="number" step="0.01" id="medicinePrice" required>
+                </div>
+                <div class="form-group">
+                    <label>Stock</label>
+                    <input type="number" id="medicineStock" required>
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea id="medicineDescription"></textarea>
+                </div>
+                <button type="submit">Save</button>
+            </form>
+        </div>
+    </div>
+    <script src="js/admin.js"></script>
+</body>
+</html>
