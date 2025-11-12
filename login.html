@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pharmacy Management System - Login</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="login-box">
+            <div class="login-header">
+                <div class="logo">💊</div>
+                <h1>Pharmacy Management System</h1>
+                <p class="subtitle">Your Health, Our Priority</p>
+            </div>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label>👤 Username</label>
+                    <input type="text" id="username" placeholder="Enter your username" required>
+                </div>
+                <div class="form-group">
+                    <label>🔒 Password</label>
+                    <input type="password" id="password" placeholder="Enter your password" required>
+                </div>
+                <div class="form-group">
+                    <label>👥 Login As</label>
+                    <select id="role">
+                        <option value="customer">Customer</option>
+                        <option value="admin">Administrator</option>
+                    </select>
+                </div>
+                <button type="submit">🚀 Login</button>
+                <p class="register-link">Don't have an account? <a href="register.html">Register Now</a></p>
+                <p class="register-link"><a href="index.html">← Back to Home</a></p>
+            </form>
+        </div>
+    </div>
+    <script src="js/login.js"></script>
+</body>
+</html>
