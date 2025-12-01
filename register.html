@@ -17,8 +17,8 @@
             </div>
             <form id="registerForm">
                 <div class="form-group">
-                    <label>👤 Full Name</label>
-                    <input type="text" id="fullname" placeholder="Enter your full name" required>
+                    <label>👤 Username</label>
+                    <input type="text" id="username" placeholder="Enter your username" required>
                 </div>
                 <div class="form-group">
                     <label>📧 Email</label>
@@ -29,19 +29,53 @@
                     <input type="tel" id="phone" placeholder="1234567890" required>
                 </div>
                 <div class="form-group">
-                    <label>🆔 Username</label>
-                    <input type="text" id="username" placeholder="Choose a username" required>
+                    <label>📍 City (Nepal)</label>
+                    <select id="address" required>
+                        <option value="">Select City</option>
+                        <option value="Kathmandu">Kathmandu</option>
+                        <option value="Pokhara">Pokhara</option>
+                        <option value="Lalitpur">Lalitpur</option>
+                        <option value="Bhaktapur">Bhaktapur</option>
+                        <option value="Biratnagar">Biratnagar</option>
+                        <option value="Birgunj">Birgunj</option>
+                        <option value="Dharan">Dharan</option>
+                        <option value="Bharatpur">Bharatpur</option>
+                        <option value="Janakpur">Janakpur</option>
+                        <option value="Hetauda">Hetauda</option>
+                        <option value="Butwal">Butwal</option>
+                        <option value="Dhangadhi">Dhangadhi</option>
+                        <option value="Nepalgunj">Nepalgunj</option>
+                        <option value="Itahari">Itahari</option>
+                        <option value="Tulsipur">Tulsipur</option>
+                        <option value="Ghorahi">Ghorahi</option>
+                        <option value="Kalaiya">Kalaiya</option>
+                        <option value="Siddharthanagar">Siddharthanagar</option>
+                        <option value="Tikapur">Tikapur</option>
+                        <option value="Mechinagar">Mechinagar</option>
+                    </select>
                 </div>
                 <div class="form-group">
                     <label>🔒 Password</label>
-                    <input type="password" id="password" placeholder="Create a strong password" required>
+                    <div style="position: relative;">
+                        <input type="password" id="password" placeholder="Create a strong password" required style="padding-right: 40px;">
+                        <span onclick="togglePassword('password')" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer; font-size: 20px;">👁️</span>
+                    </div>
                 </div>
                 <button type="submit">✨ Register</button>
                 <p class="register-link">Already have an account? <a href="login.html">Login Here</a></p>
-                <p class="register-link"><a href="index.html">← Back to Home</a></p>
             </form>
         </div>
     </div>
+    <script>
+        function togglePassword(fieldId) {
+            const field = document.getElementById(fieldId);
+            if (field.type === 'password') {
+                field.type = 'text';
+            } else {
+                field.type = 'password';
+            }
+        }
+    </script>
     <script src="js/register.js"></script>
 </body>
 </html>

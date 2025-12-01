@@ -2,8 +2,15 @@
 CREATE DATABASE IF NOT EXISTS pharmacy_db;
 USE pharmacy_db;
 
+-- Drop existing tables if they exist (to ensure clean setup)
+DROP TABLE IF EXISTS order_items;
+DROP TABLE IF EXISTS orders;
+DROP TABLE IF EXISTS medicines;
+DROP TABLE IF EXISTS customers;
+DROP TABLE IF EXISTS admins;
+
 -- Admins Table
-CREATE TABLE IF NOT EXISTS admins (
+CREATE TABLE admins (
     id INT PRIMARY KEY AUTO_INCREMENT,
     username VARCHAR(50) UNIQUE NOT NULL,
     password VARCHAR(255) NOT NULL,
@@ -11,18 +18,18 @@ CREATE TABLE IF NOT EXISTS admins (
 );
 
 -- Customers Table
-CREATE TABLE IF NOT EXISTS customers (
+CREATE TABLE customers (
     id INT PRIMARY KEY AUTO_INCREMENT,
-    fullname VARCHAR(100) NOT NULL,
-    email VARCHAR(100) UNIQUE NOT NULL,
-    phone VARCHAR(20),
     username VARCHAR(50) UNIQUE NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    phone VARCHAR(20) NOT NULL,
+    address VARCHAR(100) NOT NULL,
     password VARCHAR(255) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Medicines Table
-CREATE TABLE IF NOT EXISTS medicines (
+CREATE TABLE medicines (
     id INT PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(100) NOT NULL,
     category VARCHAR(50) NOT NULL,
@@ -33,19 +40,19 @@ CREATE TABLE IF NOT EXISTS medicines (
 );
 
 -- Orders Table
-CREATE TABLE IF NOT EXISTS orders (
+CREATE TABLE orders (
     id INT PRIMARY KEY AUTO_INCREMENT,
     customer_id INT NOT NULL,
     total DECIMAL(10, 2) NOT NULL,
     payment_method VARCHAR(20) NOT NULL,
-    delivery_address TEXT,
+    delivery_address VARCHAR(100) NOT NULL,
     status VARCHAR(20) DEFAULT 'pending',
     order_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (customer_id) REFERENCES customers(id) ON DELETE CASCADE
 );
 
 -- Order Items Table
-CREATE TABLE IF NOT EXISTS order_items (
+CREATE TABLE order_items (
     id INT PRIMARY KEY AUTO_INCREMENT,
     order_id INT NOT NULL,
     medicine_id INT NOT NULL,
@@ -72,5 +79,5 @@ INSERT INTO medicines (name, category, price, stock, description) VALUES
 ('Cough Syrup', 'Cold & Flu', 11.99, 70, 'Relieves cough symptoms');
 
 -- Insert Sample Customer
-INSERT INTO customers (fullname, email, phone, username, password) VALUES
-('John Doe', 'john@example.com', '1234567890', 'john', 'password123');
+INSERT INTO customers (username, email, phone, address, password) VALUES
+('john', 'john@example.com', '1234567890', 'Kathmandu', 'password123');

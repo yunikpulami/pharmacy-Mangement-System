@@ -84,15 +84,15 @@
             <div id="reports" class="section">
                 <h2>📊 Reports & Analytics</h2>
                 <div class="report-cards">
-                    <div class="card">
+                    <div class="card" onclick="showSection('sales')" style="cursor: pointer;">
                         <h3>💰 Total Sales</h3>
                         <p id="totalSales">$0</p>
                     </div>
-                    <div class="card">
+                    <div class="card" onclick="showSection('customers')" style="cursor: pointer;">
                         <h3>👥 Total Customers</h3>
                         <p id="totalCustomers">0</p>
                     </div>
-                    <div class="card">
+                    <div class="card" onclick="showSection('medicines')" style="cursor: pointer;">
                         <h3>💊 Total Medicines</h3>
                         <p id="totalMedicines">0</p>
                     </div>
@@ -134,6 +134,6 @@
             </form>
         </div>
     </div>
-    <script src="js/admin.js"></script>
+    <script src="js/admin.js?v=22"></script>
 </body>
 </html>

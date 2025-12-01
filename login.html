@@ -21,7 +21,10 @@
                 </div>
                 <div class="form-group">
                     <label>🔒 Password</label>
-                    <input type="password" id="password" placeholder="Enter your password" required>
+                    <div style="position: relative;">
+                        <input type="password" id="password" placeholder="Enter your password" required style="padding-right: 40px;">
+                        <span onclick="togglePassword('password')" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer; font-size: 20px;">👁️</span>
+                    </div>
                 </div>
                 <div class="form-group">
                     <label>👥 Login As</label>
@@ -32,10 +35,19 @@
                 </div>
                 <button type="submit">🚀 Login</button>
                 <p class="register-link">Don't have an account? <a href="register.html">Register Now</a></p>
-                <p class="register-link"><a href="index.html">← Back to Home</a></p>
             </form>
         </div>
     </div>
+    <script>
+        function togglePassword(fieldId) {
+            const field = document.getElementById(fieldId);
+            if (field.type === 'password') {
+                field.type = 'text';
+            } else {
+                field.type = 'password';
+            }
+        }
+    </script>
     <script src="js/login.js"></script>
 </body>
 </html>

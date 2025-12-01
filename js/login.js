@@ -29,6 +29,7 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
             alert(data.message);
         }
     } catch (error) {
-        alert('Login failed. Please try again.');
+        console.error('Error:', error);
+        alert('Login failed. Please check console for details.');
     }
 });

@@ -10,15 +10,13 @@ $role = $_POST['role'] ?? '';
 // Validation
 $errors = [];
 
-// Validate username
+// Validate username/email
 if (empty($username)) {
-    $errors[] = 'Username is required';
+    $errors[] = 'Username/Email is required';
 } elseif (strlen($username) < 3) {
-    $errors[] = 'Username must be at least 3 characters';
-} elseif (strlen($username) > 50) {
-    $errors[] = 'Username must not exceed 50 characters';
-} elseif (!preg_match('/^[a-zA-Z0-9_]+$/', $username)) {
-    $errors[] = 'Username can only contain letters, numbers, and underscores';
+    $errors[] = 'Username/Email must be at least 3 characters';
+} elseif (strlen($username) > 100) {
+    $errors[] = 'Username/Email must not exceed 100 characters';
 }
 
 // Validate password
@@ -74,7 +72,8 @@ try {
                 'user' => [
                     'id' => $user['id'],
                     'username' => $user['username'],
-                    'fullname' => $user['fullname'],
+                    'email' => $user['email'],
+                    'address' => $user['address'],
                     'role' => 'customer'
                 ]
             ]);

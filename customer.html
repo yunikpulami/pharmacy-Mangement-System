@@ -10,6 +10,12 @@
     <div class="dashboard">
         <nav class="sidebar">
             <h2>💊 Customer Panel</h2>
+            <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 15px; margin: 15px 10px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                <h3 style="margin: 0 0 12px 0; color: white; font-size: 16px; border-bottom: 1px solid rgba(255,255,255,0.3); padding-bottom: 8px;">👤 My Profile</h3>
+                <p style="margin: 8px 0; font-size: 14px; color: white;"><strong>Name:</strong> <span id="customerUsername" style="color: #fff;">-</span></p>
+                <p style="margin: 8px 0; font-size: 14px; color: white;"><strong>Email:</strong> <span id="customerEmail" style="color: #fff;">-</span></p>
+                <p style="margin: 8px 0; font-size: 14px; color: white;"><strong>City:</strong> <span id="customerAddress" style="color: #fff;">-</span></p>
+            </div>
             <ul>
                 <li><a href="#" data-section="browse">🏪 Browse Medicines</a></li>
                 <li><a href="#" data-section="cart">🛒 My Cart (<span id="cartCount">0</span>)</a></li>
@@ -116,12 +122,34 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label>Delivery Address *</label>
-                    <textarea id="deliveryAddress" rows="3" placeholder="Enter your delivery address" required></textarea>
+                    <label>Delivery City (Nepal) *</label>
+                    <select id="deliveryAddress" required>
+                        <option value="">Select City</option>
+                        <option value="Kathmandu">Kathmandu</option>
+                        <option value="Pokhara">Pokhara</option>
+                        <option value="Lalitpur">Lalitpur</option>
+                        <option value="Bhaktapur">Bhaktapur</option>
+                        <option value="Biratnagar">Biratnagar</option>
+                        <option value="Birgunj">Birgunj</option>
+                        <option value="Dharan">Dharan</option>
+                        <option value="Bharatpur">Bharatpur</option>
+                        <option value="Janakpur">Janakpur</option>
+                        <option value="Hetauda">Hetauda</option>
+                        <option value="Butwal">Butwal</option>
+                        <option value="Dhangadhi">Dhangadhi</option>
+                        <option value="Nepalgunj">Nepalgunj</option>
+                        <option value="Itahari">Itahari</option>
+                        <option value="Tulsipur">Tulsipur</option>
+                        <option value="Ghorahi">Ghorahi</option>
+                        <option value="Kalaiya">Kalaiya</option>
+                        <option value="Siddharthanagar">Siddharthanagar</option>
+                        <option value="Tikapur">Tikapur</option>
+                        <option value="Mechinagar">Mechinagar</option>
+                    </select>
                 </div>
                 <div class="payment-actions">
                     <button type="button" class="btn-cancel" onclick="closePaymentModal()">Cancel</button>
-                    <button type="submit" class="btn-pay">Pay $<span id="payAmount">0.00</span></button>
+                    <button type="submit" class="btn-pay">Pay Rs. <span id="payAmount">0.00</span></button>
                 </div>
             </form>
         </div>
@@ -136,6 +164,16 @@
             <button onclick="closeSuccessModal()" class="btn-continue">Continue Shopping</button>
         </div>
     </div>
-    <script src="js/customer.js"></script>
+    
+    <!-- Order Details Modal -->
+    <div id="orderDetailsModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeOrderDetails()">&times;</span>
+            <h2>📦 Order Details</h2>
+            <div id="orderDetailsContent"></div>
+        </div>
+    </div>
+    
+    <script src="js/customer.js?v=10"></script>
 </body>
 </html>

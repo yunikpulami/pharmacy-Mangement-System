@@ -43,19 +43,30 @@ async function loadMedicines() {
         const medicines = await response.json();
         
         const tbody = document.querySelector('#medicinesTable tbody');
-        tbody.innerHTML = medicines.map(med => `
-            <tr>
-                <td>${med.id}</td>
-                <td>${med.name}</td>
-                <td>${med.category}</td>
-                <td>$${parseFloat(med.price).toFixed(2)}</td>
-                <td>${med.stock}</td>
-                <td>
-                    <button class="btn-edit" onclick="editMedicine(${med.id})">Edit</button>
-                    <button class="btn-delete" onclick="deleteMedicine(${med.id})">Delete</button>
-                </td>
-            </tr>
-        `).join('');
+        tbody.innerHTML = medicines.map(med => {
+            let stockDisplay = med.stock;
+            let stockStyle = '';
+            if (med.stock === 0) {
+                stockDisplay = 'Out of Stock';
+                stockStyle = 'style="color: red; font-weight: bold;"';
+            } else if (med.stock < 10) {
+                stockDisplay = `${med.stock} (Low Stock)`;
+                stockStyle = 'style="color: orange; font-weight: bold;"';
+            }
+            return `
+                <tr>
+                    <td>${med.id}</td>
+                    <td>${med.name}</td>
+                    <td>${med.category}</td>
+                    <td>Rs. ${parseFloat(med.price).toFixed(2)}</td>
+                    <td ${stockStyle}>${stockDisplay}</td>
+                    <td>
+                        <button class="btn-edit" onclick="editMedicine(${med.id})">Edit</button>
+                        <button class="btn-delete" onclick="deleteMedicine(${med.id})">Delete</button>
+                    </td>
+                </tr>
+            `;
+        }).join('');
     } catch (error) {
         console.error('Error loading medicines:', error);
     }
@@ -153,11 +164,19 @@ async function loadCustomers() {
         const response = await fetch('php/get_customers.php');
         const customers = await response.json();
         
+        console.log('Customers loaded:', customers);
+        
         const tbody = document.querySelector('#customersTable tbody');
+        
+        if (!customers || customers.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 20px;">No customers found</td></tr>';
+            return;
+        }
+        
         tbody.innerHTML = customers.map(customer => `
             <tr>
                 <td>${customer.id}</td>
-                <td>${customer.fullname}</td>
+                <td>${customer.username || 'N/A'}</td>
                 <td>${customer.email}</td>
                 <td>${customer.phone}</td>
                 <td>
@@ -167,6 +186,8 @@ async function loadCustomers() {
         `).join('');
     } catch (error) {
         console.error('Error loading customers:', error);
+        const tbody = document.querySelector('#customersTable tbody');
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 20px; color: red;">Error loading customers</td></tr>';
     }
 }
 
@@ -202,15 +223,19 @@ async function loadSales() {
         const sales = await response.json();
         
         const tbody = document.querySelector('#salesTable tbody');
-        tbody.innerHTML = sales.map(sale => `
+        tbody.innerHTML = sales.map(sale => {
+            const dateOnly = sale.order_date.split(' ')[0];
+            return `
             <tr>
                 <td>${sale.id}</td>
                 <td>${sale.customer_name}</td>
-                <td>${sale.order_date}</td>
-                <td>$${parseFloat(sale.total).toFixed(2)}</td>
+                <td>${dateOnly}</td>
+                <td>Rs. ${parseFloat(sale.total).toFixed(2)}</td>
                 <td>${sale.status}</td>
+                <td><button class="btn-edit" onclick="viewOrderBill(${sale.id})">View Bill</button></td>
             </tr>
-        `).join('');
+        `;
+        }).join('');
     } catch (error) {
         console.error('Error loading sales:', error);
     }
@@ -246,7 +271,7 @@ async function loadReports() {
         const response = await fetch('php/get_reports.php');
         const reports = await response.json();
         
-        document.getElementById('totalSales').textContent = '$' + parseFloat(reports.total_sales || 0).toFixed(2);
+        document.getElementById('totalSales').textContent = 'Rs. ' + parseFloat(reports.total_sales || 0).toFixed(2);
         document.getElementById('totalCustomers').textContent = reports.total_customers || 0;
         document.getElementById('totalMedicines').textContent = reports.total_medicines || 0;
         document.getElementById('lowStock').textContent = reports.low_stock || 0;

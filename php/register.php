@@ -3,24 +3,24 @@ header('Content-Type: application/json');
 require_once 'config.php';
 
 // Get and sanitize input
-$fullname = trim($_POST['fullname'] ?? '');
+$username = trim($_POST['username'] ?? '');
 $email = trim($_POST['email'] ?? '');
 $phone = trim($_POST['phone'] ?? '');
-$username = trim($_POST['username'] ?? '');
+$address = trim($_POST['address'] ?? '');
 $password = $_POST['password'] ?? '';
 
 // Validation
 $errors = [];
 
-// Validate fullname
-if (empty($fullname)) {
-    $errors[] = 'Full name is required';
-} elseif (strlen($fullname) < 2) {
-    $errors[] = 'Full name must be at least 2 characters';
-} elseif (strlen($fullname) > 100) {
-    $errors[] = 'Full name must not exceed 100 characters';
-} elseif (!preg_match('/^[a-zA-Z\s]+$/', $fullname)) {
-    $errors[] = 'Full name can only contain letters and spaces';
+// Validate username
+if (empty($username)) {
+    $errors[] = 'Username is required';
+} elseif (strlen($username) < 3) {
+    $errors[] = 'Username must be at least 3 characters';
+} elseif (strlen($username) > 50) {
+    $errors[] = 'Username must not exceed 50 characters';
+} elseif (!preg_match('/^[a-zA-Z0-9_]+$/', $username)) {
+    $errors[] = 'Username can only contain letters, numbers, and underscores';
 }
 
 // Validate email
@@ -41,15 +41,11 @@ if (empty($phone)) {
     $errors[] = 'Phone number must be between 10 and 20 characters';
 }
 
-// Validate username
-if (empty($username)) {
-    $errors[] = 'Username is required';
-} elseif (strlen($username) < 3) {
-    $errors[] = 'Username must be at least 3 characters';
-} elseif (strlen($username) > 50) {
-    $errors[] = 'Username must not exceed 50 characters';
-} elseif (!preg_match('/^[a-zA-Z0-9_]+$/', $username)) {
-    $errors[] = 'Username can only contain letters, numbers, and underscores';
+// Validate address
+if (empty($address)) {
+    $errors[] = 'Address is required';
+} elseif (strlen($address) > 100) {
+    $errors[] = 'Address must not exceed 100 characters';
 }
 
 // Validate password
@@ -82,8 +78,8 @@ try {
     }
     
     // Insert new customer
-    $stmt = $pdo->prepare("INSERT INTO customers (fullname, email, phone, username, password) VALUES (?, ?, ?, ?, ?)");
-    $stmt->execute([$fullname, $email, $phone, $username, $password]);
+    $stmt = $pdo->prepare("INSERT INTO customers (username, email, phone, address, password) VALUES (?, ?, ?, ?, ?)");
+    $stmt->execute([$username, $email, $phone, $address, $password]);
     
     echo json_encode([
         'success' => true,
@@ -92,7 +88,7 @@ try {
 } catch(PDOException $e) {
     echo json_encode([
         'success' => false,
-        'message' => 'Registration failed. Please try again later.'
+        'message' => 'Database error: ' . $e->getMessage()
     ]);
 }
 ?>

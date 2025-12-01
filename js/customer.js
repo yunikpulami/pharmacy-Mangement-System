@@ -8,6 +8,11 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
     }
     
+    // Display customer details
+    document.getElementById('customerUsername').textContent = user.username || 'N/A';
+    document.getElementById('customerEmail').textContent = user.email || 'N/A';
+    document.getElementById('customerAddress').textContent = user.address || 'N/A';
+    
     loadMedicines();
     loadOrders();
     updateCart();
@@ -79,7 +84,7 @@ function displayMedicines(meds) {
                 <h3>${med.name}</h3>
                 <p>Category: ${med.category}</p>
                 <p>${med.description || 'No description available'}</p>
-                <p class="price">$${parseFloat(med.price).toFixed(2)}</p>
+                <p class="price">Rs. ${parseFloat(med.price).toFixed(2)}</p>
                 <p><span class="stock-badge ${stockStatus}">${stockText}</span></p>
                 ${med.stock > 0 ? 
                     (inCart ? 
@@ -150,8 +155,8 @@ function updateCart() {
         <div class="cart-item">
             <div class="cart-item-info">
                 <h4>${item.name}</h4>
-                <p>Price: $${parseFloat(item.price).toFixed(2)} each</p>
-                <p style="color: #666;">Subtotal: $${(item.price * item.quantity).toFixed(2)}</p>
+                <p>Price: Rs. ${parseFloat(item.price).toFixed(2)} each</p>
+                <p style="color: #666;">Subtotal: Rs. ${(item.price * item.quantity).toFixed(2)}</p>
             </div>
             <div class="cart-item-actions">
                 <button onclick="decreaseQuantity(${item.id})" style="width: 30px; padding: 5px;">-</button>
@@ -232,13 +237,20 @@ function checkout() {
         <div class="summary-item">
             <span class="summary-item-name">${item.name}</span>
             <span class="summary-item-qty">x${item.quantity}</span>
-            <span class="summary-item-price">$${(item.price * item.quantity).toFixed(2)}</span>
+            <span class="summary-item-price">Rs. ${(item.price * item.quantity).toFixed(2)}</span>
         </div>
     `).join('');
     
     document.getElementById('summaryTotal').textContent = total.toFixed(2);
     document.getElementById('payAmount').textContent = total.toFixed(2);
     document.getElementById('paymentForm').reset();
+    
+    // Auto-fill delivery address from user's registered address
+    const user = JSON.parse(localStorage.getItem('user'));
+    if (user && user.address) {
+        document.getElementById('deliveryAddress').value = user.address;
+    }
+    
     document.getElementById('paymentModal').style.display = 'block';
 }
 
@@ -304,9 +316,9 @@ async function processPayment(e) {
         return;
     }
     
-    const deliveryAddress = document.getElementById('deliveryAddress').value.trim();
+    const deliveryAddress = document.getElementById('deliveryAddress').value;
     if (!deliveryAddress) {
-        showNotification('Please enter delivery address', 'error');
+        showNotification('Please select delivery city', 'error');
         return;
     }
     
@@ -455,7 +467,7 @@ async function loadOrders() {
             <tr>
                 <td>${order.id}</td>
                 <td>${order.order_date}</td>
-                <td>$${parseFloat(order.total).toFixed(2)}</td>
+                <td>Rs. ${parseFloat(order.total).toFixed(2)}</td>
                 <td>${order.status}</td>
                 <td><button class="btn-edit" onclick="viewOrderDetails(${order.id})">View</button></td>
             </tr>
@@ -465,6 +477,69 @@ async function loadOrders() {
     }
 }
 
-function viewOrderDetails(orderId) {
-    alert('Order details for Order #' + orderId);
+async function viewOrderDetails(orderId) {
+    try {
+        const response = await fetch(`php/get_order_details.php?order_id=${orderId}`);
+        const data = await response.json();
+        
+        if (data.success) {
+            const order = data.order;
+            const items = data.items;
+            
+            let itemsHtml = '';
+            if (items.length > 0) {
+                itemsHtml = items.map(item => {
+                    const unit = item.unit || 'Strip';
+                    return `
+                    <tr>
+                        <td>${item.medicine_name}</td>
+                        <td>${item.quantity} ${unit}${item.quantity > 1 ? 's' : ''}</td>
+                        <td>Rs. ${parseFloat(item.price).toFixed(2)} per ${unit}</td>
+                        <td>Rs. ${(item.quantity * item.price).toFixed(2)}</td>
+                    </tr>
+                `;
+                }).join('');
+            } else {
+                itemsHtml = '<tr><td colspan="4" style="text-align: center; padding: 20px;">No item details available for this order</td></tr>';
+            }
+            
+            document.getElementById('orderDetailsContent').innerHTML = `
+                <div style="margin-bottom: 20px;">
+                    <p><strong>Order ID:</strong> #${order.id}</p>
+                    <p><strong>Order Date:</strong> ${order.order_date}</p>
+                    <p><strong>Status:</strong> <span style="color: green;">${order.status}</span></p>
+                    <p><strong>Payment Method:</strong> ${order.payment_method}</p>
+                    <p><strong>Delivery Address:</strong> ${order.delivery_address}</p>
+                </div>
+                <h3>Ordered Items:</h3>
+                <table style="width: 100%; border-collapse: collapse;">
+                    <thead>
+                        <tr style="background: #f0f0f0;">
+                            <th style="padding: 10px; border: 1px solid #ddd;">Medicine</th>
+                            <th style="padding: 10px; border: 1px solid #ddd;">Quantity</th>
+                            <th style="padding: 10px; border: 1px solid #ddd;">Price</th>
+                            <th style="padding: 10px; border: 1px solid #ddd;">Subtotal</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${itemsHtml}
+                    </tbody>
+                </table>
+                <div style="margin-top: 20px; text-align: right;">
+                    <h3>Total: Rs. ${parseFloat(order.total).toFixed(2)}</h3>
+                </div>
+            `;
+            
+            document.getElementById('orderDetailsModal').style.display = 'block';
+        } else {
+            alert('Failed to load order details: ' + (data.message || 'Unknown error'));
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Error loading order details: ' + error.message);
+    }
+}
+
+function closeOrderDetails() {
+    document.getElementById('orderDetailsModal').style.display = 'none';
 }
