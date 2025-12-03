@@ -279,3 +279,71 @@ async function loadReports() {
         console.error('Error loading reports:', error);
     }
 }
+
+async function viewOrderBill(orderId) {
+    try {
+        const response = await fetch(`php/get_order_details.php?order_id=${orderId}`);
+        const data = await response.json();
+        
+        if (data.success) {
+            const order = data.order;
+            const items = data.items;
+            
+            let itemsHtml = '';
+            if (items.length > 0) {
+                itemsHtml = items.map(item => {
+                    const unit = item.unit || 'Strip';
+                    return `
+                    <tr>
+                        <td>${item.medicine_name}</td>
+                        <td>${item.quantity} ${unit}${item.quantity > 1 ? 's' : ''}</td>
+                        <td>Rs. ${parseFloat(item.price).toFixed(2)} per ${unit}</td>
+                        <td>Rs. ${(item.quantity * item.price).toFixed(2)}</td>
+                    </tr>
+                `;
+                }).join('');
+            } else {
+                itemsHtml = '<tr><td colspan="4" style="text-align: center; padding: 20px;">No item details available</td></tr>';
+            }
+            
+            document.getElementById('billContent').innerHTML = `
+                <div style="margin-bottom: 20px;">
+                    <p><strong>Order ID:</strong> #${order.id}</p>
+                    <p><strong>Customer ID:</strong> ${order.customer_id}</p>
+                    <p><strong>Order Date:</strong> ${order.order_date}</p>
+                    <p><strong>Status:</strong> <span style="color: green;">${order.status}</span></p>
+                    <p><strong>Payment Method:</strong> ${order.payment_method}</p>
+                    <p><strong>Delivery Address:</strong> ${order.delivery_address}</p>
+                </div>
+                <h3>Ordered Items:</h3>
+                <table style="width: 100%; border-collapse: collapse;">
+                    <thead>
+                        <tr style="background: #f0f0f0;">
+                            <th style="padding: 10px; border: 1px solid #ddd;">Medicine</th>
+                            <th style="padding: 10px; border: 1px solid #ddd;">Quantity</th>
+                            <th style="padding: 10px; border: 1px solid #ddd;">Price</th>
+                            <th style="padding: 10px; border: 1px solid #ddd;">Subtotal</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${itemsHtml}
+                    </tbody>
+                </table>
+                <div style="margin-top: 20px; text-align: right;">
+                    <h3>Total: Rs. ${parseFloat(order.total).toFixed(2)}</h3>
+                </div>
+            `;
+            
+            document.getElementById('billModal').style.display = 'block';
+        } else {
+            alert('Failed to load bill: ' + (data.message || 'Unknown error'));
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Error loading bill');
+    }
+}
+
+function closeBillModal() {
+    document.getElementById('billModal').style.display = 'none';
+}
